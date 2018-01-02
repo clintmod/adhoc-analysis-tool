@@ -31,12 +31,13 @@ shinyApp(dashboardPage(
           "
         )
         ),
-      div(id = 'dataSourceForm', class='input-group col-sm-12 mb-8',
+      div(id = 'dataSourceForm', class='input-group col-sm-12',
         textInput('dataSourceInput', label = NULL, placeholder = 'Enter json url to analyze', width = '100%'),
         span(class = 'input-group-btn',
           actionButton('loadButton', 'Load')
         )
       ),
+      tags$br(),
       rpivotTableOutput('pivot', width = "100%", height = "100%"),
       shinyjs::hidden(
         textOutput("text")
@@ -52,17 +53,13 @@ shinyApp(dashboardPage(
     })
     observeEvent(input$loadButton, {
       url = input$dataSourceInput
-      print(url)
       df = fromJSON(url)
       output$pivot <- renderRpivotTable({
         req(input$dataSourceInput)
         rpivotTable(
           data = df,
-          rows = "Year",
-          cols = "Month",
           rendererName = "Row Heatmap",
-          aggregatorName = "Integer Sum",
-          vals = "Commits"
+          aggregatorName = "Integer Sum"
         )
       })
     })
