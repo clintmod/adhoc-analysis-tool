@@ -3,7 +3,7 @@
 # Used to install packages on heroku if not already installed.
 #
 
-my_packages = c("curl", "jsonlite", "rpivotTable", "shiny", "shinydashboard")
+my_packages = c("curl", "jsonlite", "rpivotTable", "shiny", "shinydashboard", "shinyjs")
 
 install_if_missing = function(p) {
   if (p %in% rownames(installed.packages()) == FALSE) {
