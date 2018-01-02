@@ -11,10 +11,14 @@ shinyApp(fluidPage(
     HTML(
       "
       <script>
+      var socket_timeout_interval
       $(document).on('shiny:connected', function(event) {
-        setTimeout(function(){
-          event.socket.emit('ping')
+        socket_timeout_interval = setInterval(function(){
+          Shiny.onInputChange('count', 0)
         }, 1000)
+      });
+      $(document).on('shiny:disconnected', function(event) {
+        clearInterval(socket_timeout_interval)
       });
       </script>
       "
@@ -25,11 +29,18 @@ shinyApp(fluidPage(
     dashboardSidebar(disable = T),
     dashboardBody(
       tags$head(tags$style(type = 'text/css',  '#pivot{ overflow-x: scroll; }')),
-      rpivotTableOutput('pivot', width = "100%", height = "100%")
+      rpivotTableOutput('pivot', width = "100%", height = "100%"),
+      textOutput("text")
     )
   )
   ),
   shinyServer(function(input, output, session) {
+    output$text <- renderText({
+      
+      req(input$count)
+      
+      paste("keep alive ", input$count)
+    })
     df = fromJSON(
       'https://salty-dusk-41217.herokuapp.com/siliconpublishing'
     )
@@ -43,4 +54,5 @@ shinyApp(fluidPage(
         vals = "Commits"
       )
     })
-  }))
+  })
+  )
