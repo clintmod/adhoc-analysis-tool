@@ -12,10 +12,11 @@ shinyApp(fluidPage(
       "
       <script>
       var socket_timeout_interval
+      var n = 0
       $(document).on('shiny:connected', function(event) {
         socket_timeout_interval = setInterval(function(){
-          Shiny.onInputChange('count', 0)
-        }, 1000)
+          Shiny.onInputChange('count', n++)
+        }, 5000)
       });
       $(document).on('shiny:disconnected', function(event) {
         clearInterval(socket_timeout_interval)
