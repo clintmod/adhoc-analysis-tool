@@ -39,16 +39,12 @@ shinyApp(dashboardPage(
       ),
       tags$br(),
       rpivotTableOutput('pivot', width = "100%", height = "100%"),
-      shinyjs::hidden(
-        textOutput("text")
-      )
-    )
-  ),
+      shinyjs::hidden(textOutput("keepAlive"))
+        )
+    ),
   shinyServer(function(input, output, session) {
-    output$text <- renderText({
-      
+    output$keepAlive <- renderText({
       req(input$count)
-      
       paste("keep alive ", input$count)
     })
     observeEvent(input$loadButton, {
